@@ -53,11 +53,32 @@
             </li>
        </ul>
     <div id="add_bckt_list_div">
-    <a id="btn_add_bckt" class="btn-floating btn-large waves-effect waves-light blue-grey lighten-1 center"><i class="material-icons">add</i></a>
-    <h6 class="blue-grey-text darken-3">New Bucket List</h6>
+        <a id="btn_add_bckt" href="#add_bckt_lst_div"
+        class="btn-floating btn-large waves-effect waves-light blue-grey lighten-1 center">
+            <i class="material-icons">add</i>
+        </a>
+        <h6 class="blue-grey-text darken-3">New Bucket List</h6>
     </div>
 
-      </ul>
+    <!-- Add Bucket List form -->
+    <!-- Modal Trigger -->
+
+    <div id="add_bckt_lst_div" class="modal">
+    <div class="modal-content">
+        <form action="/action_page.php" method="get">
+        <h4>Add Bucket List</h4>
+        Title <input type="text" name="fname"><br>
+        Description <input type="text" name="lname"><br>
+
+        <button class="btn waves-effect waves-light" type="submit" name="action">Add
+        </button>
+
+        <a class="waves-effect waves-light btn">Abort</a>
+
+        </form> 
+    </div>
+</div>
+
     </div>
     </div>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
