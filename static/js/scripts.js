@@ -14,6 +14,10 @@ $(document).ready(function(){
   $("#btn_add_bckt").click(function(){
     $("#frm_add_bckt_lst").toggle(); 
   });
+
+  $(".btn_delete").click(function(){
+    $("#frm_del_activity").toggle(); 
+  });
  
  
   $(document).ready(function(){
