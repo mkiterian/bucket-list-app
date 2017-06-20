@@ -15,8 +15,16 @@ class BucketListTest(TestCase):
     def test_success(self):
         # sends HTTP GET request to the application
         # on the specified path
-        result = self.app.get('/')
+        result = self.app.get('/bucketlist.html')
         self.assertEqual(result.status_code, 200)
+
+    def test_failure(self):
+        # sends HTTP GET request to the application
+        # on the specified path
+        result = self.app.get('/nonexistant.html')
+        self.assertEqual(result.status_code, 404)
+
+    
 
 if __name__ == '__main__':
     unittest.main()
