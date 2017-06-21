@@ -4,6 +4,8 @@ from user import User
 from flask import (Flask, render_template, url_for, 
         redirect, request, make_response, jsonify)
 
+users = {}
+
 app = Flask(__name__)
 
 def get_saved_data():
@@ -13,11 +15,30 @@ def get_saved_data():
         data = {}
     return data
 
+@app.route('/login')
 @app.route('/')
 def index():
     data = get_saved_data()
     return render_template('login.html', user=data)
 
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+
+        if password == confirm_password:
+            user = User(username, email, password)
+            users['email'] = user
+            
+            return redirect(url_for('manage', data = username))
+
+        else:
+            return redirect(url_for('signup'))
+    else:
+        return render_template('signup.html')
 
 
 @app.route('/save', methods=['POST', 'GET'])
