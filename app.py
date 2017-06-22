@@ -28,7 +28,7 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-
+        print('tttttttttttttttttttttttttttt')
         print(users)
 
         
@@ -95,33 +95,45 @@ def manage():
     
 @app.route('/show_bucket', methods=['GET'])
 def show_bucket():
-    current_bucketlist = request.args.get('bucketlist')
-
     return render_template('bucketlist.html')
 
+@app.route('/add_activity/<bucketlist>')
 @app.route('/add_activity', methods=['POST', 'GET'])
 def add_activity_to_bucketlist():
+    current_bucketlist = request.args.get('bucketlist')
+    print('++++++++++++++++++++++++++++')
+    print(current_bucketlist)
+    print('++++++++++++++++++++++++++++')
     if request.method == 'POST':
+        
         title = request.form['title']        
         description = request.form['description']
+
+        print('#'*20)
+        print(title)
+        print(description)
 
         username = session['username']
         
         for user in users.values():
             if user.username == username:
                activity = Activity(title, description)
-               current_bucketlist.add_activity(activity)
+            #    current_bucketlis = "Travel"
+            #    current_bucketlist.add_activity(activity)
 
         data =  {"title":title, "description": description}
+        print('dddddddddddddddddddddddd')
+        print(data)
+        print('dddddddddddddddddddddd')
         
         #return render_template('managelists.html', activity=data)
         #return jsonify({"name":name, "description": description})
-        return render_template('managelists.html', acts=data)
+        return render_template('bucketlist.html', acts=data)
     else:
         bucketlist = request.args['bucketlist']
 
         username = session['username']
-        return render_template('managelists.html', data=username)
+        return render_template('bucketlist.html', data=username)
 
 
 
