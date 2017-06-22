@@ -1,5 +1,8 @@
 import json
 from user import User
+from bucketlist import BucketList
+from user import User
+from activity import Activity
 
 from flask import (Flask, render_template, url_for, 
         redirect, request, make_response, jsonify, session)
@@ -8,17 +11,34 @@ users = {}
 
 app = Flask(__name__)
 
+'''
 def get_saved_data():
     try:
         data = json.loads(request.cookies.get('user'))
     except TypeError:
         data = {}
     return data
+'''
 
-@app.route('/')
-def index():
-    data = get_saved_data()
-    return render_template('login.html', user=data)
+current_bucketlist = None
+
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        print(users)
+
+        
+        for user in users.values():
+            if user.username == username:
+                if user.password == password:
+                    session['username'] = request.form['username']
+                    return redirect(url_for('manage'))
+    else:
+        return render_template('login.html')
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -56,18 +76,54 @@ def manage():
         name = request.form['title']        
         description = request.form['description']
 
-        data =  {"name":name, "description": description}
+        username = session['username']
+        
+        for user in users.values():
+            if user.username == username:
+                user.bucketlists[name] = BucketList(name, description)
 
+        data = user.bucketlists
+        #data =  {"name":name, "description": description}
+        
         #return render_template('managelists.html', activity=data)
         #return jsonify({"name":name, "description": description})
-        return render_template('managelists.html', data=data)
+        return render_template('managelists.html', acts=data)
     else:
-        data = get_saved_data()
-        return render_template('managelists.html', data=data)
+
+        username = session['username']
+        return render_template('managelists.html', data=username)
     
 @app.route('/show_bucket', methods=['GET'])
 def show_bucket():
+    current_bucketlist = request.args.get('bucketlist')
+
     return render_template('bucketlist.html')
+
+@app.route('/add_activity', methods=['POST', 'GET'])
+def add_activity_to_bucketlist():
+    if request.method == 'POST':
+        title = request.form['title']        
+        description = request.form['description']
+
+        username = session['username']
+        
+        for user in users.values():
+            if user.username == username:
+               activity = Activity(title, description)
+               current_bucketlist.add_activity(activity)
+
+        data =  {"title":title, "description": description}
+        
+        #return render_template('managelists.html', activity=data)
+        #return jsonify({"name":name, "description": description})
+        return render_template('managelists.html', acts=data)
+    else:
+        bucketlist = request.args['bucketlist']
+
+        username = session['username']
+        return render_template('managelists.html', data=username)
+
+
 
 if __name__ == '__main__':
     app.secret_key = 'xcxcyuxcyuxcyuxcyxuee'
