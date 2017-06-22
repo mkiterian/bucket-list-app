@@ -2,13 +2,14 @@ import unittest
 from unittest import TestCase
 from user import User
 from bucketlist import BucketList
-from flask import url_for
+from flask import url_for, session
 
 from app import app
 
 
 class BucketListTest(TestCase):
-    def setUp(self):
+    def setUp(self):        
+        app.config['SECRET_KEY'] = 'seasasaskrit!'
         # creates a test client
         self.client = app.test_client()
         
@@ -30,20 +31,16 @@ class BucketListTest(TestCase):
         # assert login page loads correctly
         result = self.client.get('/login')
         self.assertTrue(b'The best way to keep track of your dreams and goals' in result.data)
-    '''
-    def test_signup(self):
-        # register a new account
-        
 
-            response = self.client.post(url_for('/signup'), data={
+    def test_sign_page_posts_and_redirects(self):
+        result = self.client.post('signup', data={
             'username': 'hermano',
             'email': 'herm@email.com',
             'password': 'hard',
             'confirm_password': 'hard'
-            })
-            self.assertTrue(response.status_code == 302)
-    '''
-    
+        })
+        self.assertTrue(result.status_code == 302)
+
     
 
 if __name__ == '__main__':
