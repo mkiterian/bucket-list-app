@@ -128,7 +128,7 @@ def add_activity_to_bucketlist():
         
         #return render_template('managelists.html', activity=data)
         #return jsonify({"name":name, "description": description})
-        return render_template('bucketlist.html', acts=data)
+        return render_template('bucketlist.html', bucketlist=current_bucketlist, acts=data)
     else:
         bucketlist = request.args['bucketlist']
 
