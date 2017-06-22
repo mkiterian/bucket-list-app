@@ -4,7 +4,7 @@ from user import User
 from bucketlist import BucketList
 from flask import url_for, session
 
-from app import app
+from app import app, users
 
 
 class BucketListTest(TestCase):
@@ -40,6 +40,27 @@ class BucketListTest(TestCase):
             'confirm_password': 'hard'
         })
         self.assertTrue(result.status_code == 302)
+
+    def test_signup_redirects_to_managelist(self):
+        result = self.client.post('signup', data={
+            'username': 'hermano',
+            'email': 'herm@email.com',
+            'password': 'hard',
+            'confirm_password': 'hard'
+        }, follow_redirects = True)
+        self.assertIn(b'My Bucket Lists', result.data)
+
+    def test_login_page_posts_and_redirects(self):
+        user = User('hermano', 'herm@email.com', 'hard')
+        users['herm@email.com'] = user
+
+        result = self.client.post('login', data={
+            'username': 'hermano',
+            'password': 'hard'
+        })
+        self.assertTrue(result.status_code == 302)
+
+    
 
     
 
