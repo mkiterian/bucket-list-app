@@ -17,7 +17,7 @@
   <div class="container blue-grey lighten-4" style="margin-top: 5px">
     <div class="tagline blue-grey-text darken-3"> The best way to keep track of your dreams and goals </div>
     <div class="row">
-      <form id="frm_login" class="card col s12 m6 offset-m3" action= {{ url_for('save') }} method="POST">
+      <form id="frm_login" class="card col s12 m6 offset-m3" action= {{ url_for('login') }} method="POST">
         <h5 class="center-align blue-grey-text darken-3">Login</h5>
         <div class="section">
         <div class="row">
@@ -38,7 +38,7 @@
         
       </form>
       <div class="row col s12 signup">
-        <a class="blue-grey-text lighten-1" href="E://Week2/materialize/signup.html">Signup</a>
+        <a class="blue-grey-text lighten-1" href={{ url_for('signup') }}>Signup</a>
       </div>
       
     </div>
