@@ -28,10 +28,7 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        print('tttttttttttttttttttttttttttt')
-        print(users)
 
-        
         for user in users.values():
             if user.username == username:
                 if user.password == password:
@@ -105,6 +102,22 @@ def manage():
 def show_bucket():
     return render_template('bucketlist.html')
 
+@app.route('/delete_bucketlist/<name>', methods=['GET'])
+def delete_bucketlist(name):
+    username = session['username']
+
+    bucketlists = None
+
+    for user in users.values():
+        if user.username == username:
+            bucketlists = user.bucketlists
+            break
+
+    if name in bucketlists.keys():
+        del bucketlists[name]
+                
+    return render_template('managelists.html', data=bucketlists)
+
 @app.route('/add_activity/<bucketlist>')
 @app.route('/add_activity', methods=['POST', 'GET'])
 def add_activity_to_bucketlist():
@@ -147,16 +160,12 @@ def add_activity_to_bucketlist():
 
         data = bcktls.activities
 
-        
-        #return render_template('managelists.html', activity=data)
-        #return jsonify({"name":name, "description": description})
         return render_template('bucketlist.html', bucketlist=current_bucketlist, acts=data)
     else:
         bucketlist = request.args['bucketlist']
 
         username = session['username']
         return render_template('bucketlist.html', data=username)
-
 
 
 

@@ -89,7 +89,7 @@ class BucketListTest(TestCase):
 
     def test_bucket_list_instance(self):
         bktlist = BucketList('Recipes', 'Learn to cook different')
-        self.assertEqual(isinstance(bktlist), True)
+        self.assertEqual(isinstance(bktlist, BucketList), True)
        
 
 

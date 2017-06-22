@@ -33,7 +33,8 @@
                 <div class="a_bucket_list">
                     <a href={{ url_for('add_activity_to_bucketlist', bucketlist=key) }} class="blue-grey-text darken-3">{{ key }}</a>
                     <a class="waves-effect waves-light btn blue-grey lighten-1 btn_update_bckt" href="#frm_add_bckt_div">Update</a>
-                    <a class="waves-effect waves-light blue-grey lighten-1 btn btn_delete_bckt">Delete</a>
+                    <a class="waves-effect waves-light blue-grey lighten-1 btn btn_delete_bckt"
+                    href= {{ url_for('delete_bucketlist', name=key) }}>Delete</a>
                 </div>           
             </li>
             {% endfor %}
