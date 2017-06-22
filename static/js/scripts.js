@@ -14,12 +14,22 @@ $(document).ready(function(){
   $(".btn_delete").click(function(){
     $("#frm_del_activity").toggle(); 
   });
+
+  $("#edit").click(function(){
+    $("#up_title").value = $('#activ_ttl').html
+    $('#up_desc').value = $('#activ_desc').html
+  });
  
  
   $(document).ready(function(){
     // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
     $('.modal').modal();
   });
+
+   if ($(".chkbox").prop("checked"))
+    $(".chkbox").prop("checked", false);
+  else
+    $(".chkbox").prop("checked", true);
 
 
   $(btn_update_bckt).click
