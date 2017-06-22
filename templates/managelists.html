@@ -12,8 +12,8 @@
         <a href="#!" class="brand-logo center">Bucket List</a>
         <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
         <ul class="right hide-on-med-and-down">
-            <li class="username">{{ user_name }}</li>
-            <li class="logout_link"><a href="login.html">Logout</a></li>
+            <li class="username">{{session['username']}}</li>
+            <li class="logout_link"><a href={{ url_for('logout')}}>Logout</a></li>
         </ul>
         <ul class="side-nav" id="mobile-demo">
             <li><a href="login.html">Logout</a></li>
@@ -25,32 +25,21 @@
     <div class="container">
        <ul class="collection with-header bucket_list">
             <li class="collection-header blue-grey-text darken-3"><h4>My Bucket Lists</h4></li>
+
+            {% if acts %}
+            {% for key in acts.keys() %}
             <li class="collection-item">
                 
                 <div class="a_bucket_list">
-                    <a href="listbucket.html" class="blue-grey-text darken-3">My Travel bucketlist</a>
+                    <a href={{ url_for('add_activity_to_bucketlist', bucketlist=key) }} class="blue-grey-text darken-3">{{ key }}</a>
                     <a class="waves-effect waves-light btn blue-grey lighten-1 btn_update_bckt" href="#frm_add_bckt_div">Update</a>
                     <a class="waves-effect waves-light blue-grey lighten-1 btn btn_delete_bckt">Delete</a>
                 </div>           
             </li>
+            {% endfor %}
+            {% endif %}
 
-            <li class="collection-item">
-                
-                <div class="a_bucket_list">
-                    <a href="listbucket.html" class="blue-grey-text darken-3">Daredevil stunts</a>
-                    <a class="waves-effect waves-light btn btn_update_bckt blue-grey lighten-1" href="#frm_add_bckt_div">Update</a>
-                    <a class="waves-effect waves-light blue-grey lighten-1 btn btn_delete_bckt">Delete</a>
-                </div>           
-            </li>
 
-            <li class="collection-item">
-                
-                <div class="a_bucket_list">
-                    <a href="listbucket.html" class="blue-grey-text darken-3">Learn new languages</a>
-                    <a class="waves-effect waves-light btn btn_update_bckt blue-grey lighten-1" href="#frm_add_bckt_div">Update</a>
-                    <a class="waves-effect waves-light blue-grey lighten-1 btn btn_delete_bckt">Delete</a>
-                </div>           
-            </li>
        </ul>
     <div id="add_bckt_list_div">
         <a id="btn_add_bckt" href="#add_bckt_lst_div"
@@ -65,7 +54,7 @@
 
     <div id="add_bckt_lst_div" class="modal">
     <div class="modal-content">
-        <form action="" method="get">
+        <form action={{url_for('manage')}} method="POST">
         <h4>Add Bucket List</h4>
         Title <input type="text" name="title"><br>
         Description <input type="text" name="description"><br>

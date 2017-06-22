@@ -40,6 +40,7 @@ def login():
     else:
         return render_template('login.html')
 
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -60,6 +61,13 @@ def signup():
             return redirect(url_for('signup'))
     else:
         return render_template('signup.html')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+
+    return redirect(url_for('login'))
+
 
 
 @app.route('/save', methods=['POST', 'GET'])
@@ -114,6 +122,8 @@ def add_activity_to_bucketlist():
         print(description)
 
         username = session['username']
+
+        activity = None
         
         for user in users.values():
             if user.username == username:
@@ -121,10 +131,22 @@ def add_activity_to_bucketlist():
             #    current_bucketlis = "Travel"
             #    current_bucketlist.add_activity(activity)
 
-        data =  {"title":title, "description": description}
+        #data =  {"title":title, "description": description}
         print('dddddddddddddddddddddddd')
-        print(data)
+        #print(data)
         print('dddddddddddddddddddddd')
+
+        bcktls = None
+
+        for key in user.bucketlists.keys():
+            if current_bucketlist == key:
+                bcktls = user.bucketlists[key]
+                break
+
+        bcktls.add_activity(activity)
+
+        data = bcktls.activities
+
         
         #return render_template('managelists.html', activity=data)
         #return jsonify({"name":name, "description": description})
@@ -137,7 +159,11 @@ def add_activity_to_bucketlist():
 
 
 
+
+
 if __name__ == '__main__':
     app.secret_key = 'xcxcyuxcyuxcyuxcyxuee'
+
+    #use environment variable
 
     app.run(debug=True)

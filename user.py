@@ -6,4 +6,5 @@ class User():
         self.username = username
         self.email = email
         self.password = password
-        self.bucketlists = []
+        self.bucketlists = {}
+        self.logged_in = False

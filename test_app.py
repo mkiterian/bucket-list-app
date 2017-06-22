@@ -14,6 +14,7 @@ class BucketListTest(TestCase):
         self.client = app.test_client()
         
         self.client.testing = True
+        
 
     def test_success(self):
         # sends HTTP GET request to the application
@@ -60,7 +61,37 @@ class BucketListTest(TestCase):
         })
         self.assertTrue(result.status_code == 302)
 
-    
+    def test_successful_login_redirects_to_managelists(self):
+        user = User('hermano', 'herm@email.com', 'hard')
+        users['herm@email.com'] = user
+
+        result = self.client.post('login', data={
+            'username': 'hermano',
+            'password': 'hard'
+        }, follow_redirects = True)
+        self.assertIn(b'My Bucket Lists', result.data)
+
+    def test_add_bucketlist_successfully_to_user(self):
+        user = User('hermano', 'herm@email.com', 'hard')
+        users['herm@email.com'] = user
+        
+        initial_no_of_bucketlists = len(user.bucketlists)
+
+        bktlist = BucketList('Recipes', 'Learn to cook different')
+        user.bucketlists['Recipes'] = bktlist
+
+        self.assertEqual(len(user.bucketlists) - initial_no_of_bucketlists, 1)
+
+    def test_user_has_property_bucketlists(self):
+        user = User('hermano', 'herm@email.com', 'hard')
+        users['herm@email.com'] = user
+        self.assertTrue(hasattr(user, 'bucketlists'))
+
+    def test_bucket_list_instance(self):
+        bktlist = BucketList('Recipes', 'Learn to cook different')
+        self.assertEqual(isinstance(bktlist), True)
+       
+
 
     
 
