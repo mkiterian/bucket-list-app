@@ -5,20 +5,11 @@ from user import User
 from activity import Activity
 
 from flask import (Flask, render_template, url_for, 
-        redirect, request, make_response, jsonify, session)
+        redirect, request, jsonify, session, flash)
 
 users = {}
 
 app = Flask(__name__)
-
-'''
-def get_saved_data():
-    try:
-        data = json.loads(request.cookies.get('user'))
-    except TypeError:
-        data = {}
-    return data
-'''
 
 current_bucketlist = None
 
@@ -34,6 +25,10 @@ def login():
                 if user.password == password:
                     session['username'] = request.form['username']
                     return redirect(url_for('manage'))
+                else:
+                    flash('Wrong password')
+                    return render_template('login.html')
+
     else:
         return render_template('login.html')
 
@@ -48,11 +43,11 @@ def signup():
 
         if password == confirm_password:
             user = User(username, email, password)
-            users['email'] = user
+            users[email] = user
 
             session['username'] = request.form['username']
             
-            return redirect(url_for('manage', data = username))
+            return redirect(url_for('manage', user = username))
 
         else:
             return redirect(url_for('signup'))
@@ -78,7 +73,7 @@ def save():
 @app.route('/manage', methods=['POST', 'GET'])
 def manage():
     if request.method == 'POST':
-        name = request.form['title']        
+        name = request.form['title']
         description = request.form['description']
 
         username = session['username']
@@ -88,10 +83,7 @@ def manage():
                 user.bucketlists[name] = BucketList(name, description)
 
         data = user.bucketlists
-        #data =  {"name":name, "description": description}
         
-        #return render_template('managelists.html', activity=data)
-        #return jsonify({"name":name, "description": description})
         return render_template('managelists.html', acts=data)
     else:
 
@@ -116,15 +108,12 @@ def delete_bucketlist(name):
     if name in bucketlists.keys():
         del bucketlists[name]
                 
-    return render_template('managelists.html', data=bucketlists)
+    return redirect(url_for('manage'))
 
 @app.route('/add_activity/<bucketlist>')
 @app.route('/add_activity', methods=['POST', 'GET'])
 def add_activity_to_bucketlist():
     current_bucketlist = request.args.get('bucketlist')
-    print('++++++++++++++++++++++++++++')
-    print(current_bucketlist)
-    print('++++++++++++++++++++++++++++')
     if request.method == 'POST':
         
         title = request.form['title']        
@@ -141,13 +130,6 @@ def add_activity_to_bucketlist():
         for user in users.values():
             if user.username == username:
                activity = Activity(title, description)
-            #    current_bucketlis = "Travel"
-            #    current_bucketlist.add_activity(activity)
-
-        #data =  {"title":title, "description": description}
-        print('dddddddddddddddddddddddd')
-        #print(data)
-        print('dddddddddddddddddddddd')
 
         bcktls = None
 
@@ -168,11 +150,7 @@ def add_activity_to_bucketlist():
         return render_template('bucketlist.html', data=username)
 
 
-
-
 if __name__ == '__main__':
     app.secret_key = 'xcxcyuxcyuxcyuxcyxuee'
-
-    #use environment variable
 
     app.run(debug=True)
