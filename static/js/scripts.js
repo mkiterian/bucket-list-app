@@ -19,10 +19,8 @@ $(document).ready(function(){
     $("#up_title").value = $('#activ_ttl').html
     $('#up_desc').value = $('#activ_desc').html
   });
- 
- 
+
   $(document).ready(function(){
-    // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
     $('.modal').modal();
   });
 
