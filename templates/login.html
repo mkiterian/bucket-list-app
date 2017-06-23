@@ -19,7 +19,11 @@
     <div class="row">
       <form id="frm_login" class="card col s12 m6 offset-m3" action= {{ url_for('login') }} method="POST">
         <h5 class="center-align blue-grey-text darken-3">Login</h5>
-        <div class="section">
+        <div class="message">
+          {% if message %}
+          {{ request.args.get(message) }}
+          {% endif %}
+        </div>
         <div class="row">
             <div class=" input-field col s12">
               <input id="username" type="text" class="validate" name='username' required>
