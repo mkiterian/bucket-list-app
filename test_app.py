@@ -1,11 +1,12 @@
 import unittest
 from unittest import TestCase
-from user import User
-from bucketlist import BucketList
+
 from flask import url_for, session
 
 from app import app, users
-
+from activity import Activity 
+from user import User
+from bucketlist import BucketList
 
 class BucketListTest(TestCase):
     def setUp(self):        
@@ -32,6 +33,18 @@ class BucketListTest(TestCase):
         # assert login page loads correctly
         result = self.client.get('/login')
         self.assertTrue(b'The best way to keep track of your dreams and goals' in result.data)
+
+    def test_logout_redirects_user(self):
+        user = User('hermano', 'herm@email.com', 'hard')
+        users['herm@email.com'] = user
+
+        self.client.post('login', data={
+            'username': 'hermano',
+            'password': 'hard'
+        })
+        # assert login page loads correctly
+        result = self.client.get('/logout')
+        self.assertTrue(result.status_code == 302)
 
     def test_sign_page_posts_and_redirects(self):
         result = self.client.post('signup', data={
@@ -82,15 +95,32 @@ class BucketListTest(TestCase):
 
         self.assertEqual(len(user.bucketlists) - initial_no_of_bucketlists, 1)
 
+    def test_add_activity_successfully_to_bucketlist(self):
+        bucketlist = BucketList('Travels', 'Tour Africa')
+        activity = Activity('Egypt', 'Visit the Pyramids')
+        
+        initial_no_of_activities = len(bucketlist.activities)
+
+        bucketlist.add_activity(activity)
+
+        self.assertEqual(len(bucketlist.activities) - initial_no_of_activities, 1)
+
     def test_user_has_property_bucketlists(self):
         user = User('hermano', 'herm@email.com', 'hard')
         users['herm@email.com'] = user
         self.assertTrue(hasattr(user, 'bucketlists'))
 
-    def test_bucket_list_instance(self):
+    def test_bucket_list_is_instance_of_BucketList(self):
         bktlist = BucketList('Recipes', 'Learn to cook different')
         self.assertEqual(isinstance(bktlist, BucketList), True)
-       
+
+    def test_activity_is_deleted_from_bucketlist(self):
+        bucketlist = BucketList('Travels', 'Tour Africa')
+        activity = Activity('Egypt', 'Visit the Pyramids')
+        bucketlist.add_activity(activity)
+        initial_no_of_activities = len(bucketlist.activities)
+        bucketlist.delete_activity(activity)
+        self.assertEqual(len(bucketlist.activities), 0)
 
 
     
