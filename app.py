@@ -19,16 +19,12 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-
+        
         for user in users.values():
             if user.username == username:
                 if user.password == password:
                     session['username'] = request.form['username']
                     return redirect(url_for('manage'))
-                else:
-                    flash('Wrong password')
-                    return render_template('login.html')
-
     else:
         return render_template('login.html')
 
@@ -89,10 +85,6 @@ def manage():
 
         username = session['username']
         return render_template('managelists.html', data=username)
-    
-@app.route('/show_bucket', methods=['GET'])
-def show_bucket():
-    return render_template('bucketlist.html')
 
 @app.route('/delete_bucketlist/<name>', methods=['GET'])
 def delete_bucketlist(name):
@@ -119,10 +111,6 @@ def add_activity_to_bucketlist():
         title = request.form['title']        
         description = request.form['description']
 
-        print('#'*20)
-        print(title)
-        print(description)
-
         username = session['username']
 
         activity = None
@@ -138,9 +126,9 @@ def add_activity_to_bucketlist():
                 bcktls = user.bucketlists[key]
                 break
 
-        bcktls.add_activity(activity)
+        user.bucketlists[current_bucketlist].add_activity(activity)
 
-        data = bcktls.activities
+        data = user.bucketlists[current_bucketlist].activities
 
         return render_template('bucketlist.html', bucketlist=current_bucketlist, acts=data)
     else:
@@ -149,6 +137,10 @@ def add_activity_to_bucketlist():
         username = session['username']
         return render_template('bucketlist.html', data=username)
 
+
+@app.route('/update_activity')
+def update_activity():
+    pass
 
 if __name__ == '__main__':
     app.secret_key = 'xcxcyuxcyuxcyuxcyxuee'
