@@ -13,3 +13,12 @@ class BucketList():
         '''Adds an activity to a certain bucketlist '''
         self.activities.append(activity)
         return True
+
+    def delete_activity(self, activity):
+        for item in self.activities:
+            if activity.title == item.title:
+                self.activities.remove(activity)
+                break
+        
+        return True
+        
