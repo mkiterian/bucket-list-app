@@ -93,45 +93,34 @@ def delete_bucketlist(name):
     
     return render_template('addlists.html', bucketlists = user.bucketlists)
 
-@app.route('/add_activity/<bucketlist>')
 @app.route('/add_activity', methods=['POST', 'GET'])
 def add_activity_to_bucketlist():
+    user = None
+    username = session['user']['username']
+
+    if username in users.keys():
+            user = users[username]
+
     current_bucketlist = request.args.get('bucketlist')
-    if request.method == 'POST':
-        
+
+
+    if request.method == 'POST':       
         title = request.form['title']        
         description = request.form['description']
+                
+        activity = Activity(title, description)
 
-        this_user  = None
+        if current_bucketlist in user.bucketlists.keys():
+            user.bucketlists[current_bucketlist].add_activity(activity)
 
-        username = session['username']
+        activities = user.bucketlists[current_bucketlist].activities
 
-        activity = None
-        
-        for user in users.values():
-            if user.username == username:
-                this_user = user
-                activity = Activity(title, description)
-
-        
-
-        bcktls = None
-
-        for key in user.bucketlists.keys():
-            if current_bucketlist == key:
-                bcktls = user.bucketlists[key]
-                break
-
-        user.bucketlists[current_bucketlist].add_activity(activity)
-
-        data = user.bucketlists[current_bucketlist].activities
-
-        return render_template('bucketlist.html', bucketlist=current_bucketlist, acts=data)
+        return render_template('bucketlist.html',
+                               bucketlist=current_bucketlist,
+                               activities=activities)
     else:
-        bucketlist = request.args['bucketlist']
-
-        username = session['username']
-        return render_template('bucketlist.html', data=username)
+        return render_template('bucketlist.html', bucketlist=current_bucketlist,
+                               activities=user.bucketlists[current_bucketlist].activities)
 
 
 @app.route('/update_activity')
