@@ -31,6 +31,7 @@ def login():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
+    ''' registers a new user if the signup form is posted '''
     if request.method == 'POST':
         username = request.form['username']
         email = request.form['email']
@@ -39,11 +40,11 @@ def signup():
 
         if password == confirm_password:
             user = User(username, email, password)
-            users[email] = user
+            users[username] = user
 
-            session['username'] = request.form['username']
-            
-            return redirect(url_for('manage', user = username))
+            session['user'] = {'username': username, 'email': email}
+
+            return redirect(url_for('add_bucketlist', user=session['user']['username']))
 
         else:
             return redirect(url_for('signup'))
@@ -68,6 +69,7 @@ def save():
 
 @app.route('/manage', methods=['POST', 'GET'])
 def manage():
+
     if request.method == 'POST':
         name = request.form['title']
         description = request.form['description']
@@ -82,7 +84,7 @@ def manage():
         
         return render_template('managelists.html', acts=data)
     else:
-
+        #pass bucketlist in get
         username = session['username']
         return render_template('managelists.html', data=username)
 
@@ -93,12 +95,13 @@ def delete_bucketlist(name):
     bucketlists = None
 
     for user in users.values():
+        #delete from user.bucketlists
         if user.username == username:
             bucketlists = user.bucketlists
             break
 
     if name in bucketlists.keys():
-        del bucketlists[name]
+        del user.bucketlists[name]
                 
     return redirect(url_for('manage'))
 
@@ -111,13 +114,18 @@ def add_activity_to_bucketlist():
         title = request.form['title']        
         description = request.form['description']
 
+        this_user  = None
+
         username = session['username']
 
         activity = None
         
         for user in users.values():
             if user.username == username:
-               activity = Activity(title, description)
+                this_user = user
+                activity = Activity(title, description)
+
+        
 
         bcktls = None
 
