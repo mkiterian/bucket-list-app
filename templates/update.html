@@ -14,7 +14,7 @@
 
   <div class="container blue-grey lighten-4" style="margin-top: 5px">
     <div class="row">
-        <form action="" method="POST">
+        <form action="/update_bucket" method="POST">
         <h4>{{ request.args.get('name') }}</h4>
         Title <input type="text" name="name" value="{{ request.args.get('name') }}"><br>
         Description <input type="text" name="description" value="{{ request.args.get('description') }}"><br>
