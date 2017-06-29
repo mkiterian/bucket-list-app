@@ -1,4 +1,5 @@
 from user import User
+import urllib.parse as urlparse
 from bucketlist import BucketList
 
 from activity import Activity
@@ -93,21 +94,31 @@ def delete_bucketlist(name):
     
     return render_template('addlists.html', bucketlists = user.bucketlists)
 
+@app.route('/update_bucket')
+def update_bucket():
+    return render_template('update.html')
+
+@app.route('/update_bucketlist/<name>/<description>')
+def update_bucketlist(name, description):
+    #return render_template('update.html', bucketlistinfo={'name':name, 'description':description})
+    return redirect(url_for('update_bucket', name=name, description=description))
+
 @app.route('/add_activity', methods=['POST', 'GET'])
 def add_activity_to_bucketlist():
+    ''' Add activity to named bucketlist '''
     user = None
     username = session['user']['username']
 
     if username in users.keys():
-            user = users[username]
+        user = users[username]
 
     current_bucketlist = request.args.get('bucketlist')
 
 
-    if request.method == 'POST':       
-        title = request.form['title']        
+    if request.method == 'POST':
+        title = request.form['title']
         description = request.form['description']
-                
+
         activity = Activity(title, description)
 
         if current_bucketlist in user.bucketlists.keys():
@@ -136,7 +147,9 @@ def delete_activity(name, title):
         if user.bucketlists[name].activities[i].title == title:
             user.bucketlists[name].activities.pop(i)
 
-            return redirect(url_for('add_activity_to_bucketlist', bucketlist=user.bucketlists[name].name, activities=user.bucketlists[name].activities))
+            return redirect(url_for('add_activity_to_bucketlist',
+                                    bucketlist=user.bucketlists[name].name,
+                                    activities=user.bucketlists[name].activities))
 
 @app.route('/update_activity')
 def update_activity():
