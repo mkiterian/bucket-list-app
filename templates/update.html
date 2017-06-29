@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update</title>
+    <link rel="stylesheet" href="..\static\css\materialize.min.css">
+    <link rel="stylesheet" href="..\static\css\styles.css">
+</head>
+<body>
+  <nav class=" blue-grey lighten-2">
+    <div class="nav-wrapper">
+      <a href="#!" class="brand-logo center">Bucket List</a>
+    </div>
+  </nav>
+
+  <div class="container blue-grey lighten-4" style="margin-top: 5px">
+    <div class="row">
+        <form action="" method="POST">
+        <h4>{{ request.args.get('name') }}</h4>
+        Title <input type="text" name="name" value="{{ request.args.get('name') }}"><br>
+        Description <input type="text" name="description" value="{{ request.args.get('description') }}"><br>
+
+        <button class="btn waves-effect waves-light" type="submit" name="action">Save
+        </button>
+
+        <a class="waves-effect waves-light btn">Abort</a>
+
+        </form> 
+    
+    </div>
+  </div>
+
+  <script type="text/javascript" src="..\static\js\jquery-2.1.1.min.js"></script>
+  <script src="..\static\js\materialize.min.js"></script>
+</body>
+</html>
