@@ -94,13 +94,34 @@ def delete_bucketlist(name):
     
     return render_template('addlists.html', bucketlists = user.bucketlists)
 
-@app.route('/update_bucket')
+@app.route('/update_bucket', methods=['POST', 'GET'])
 def update_bucket():
-    return render_template('update.html')
+    if request.method == 'POST':
+        name = request.form['name']
+        description = request.form['description']
+        user = None
+        username = session['user']['username']
 
-@app.route('/update_bucketlist/<name>/<description>')
+        if username in users.keys():
+            user = users[username]
+            user.bucketlists[name] = BucketList(name, description)
+
+        return render_template('addlists.html', bucketlists=user.bucketlists)
+
+    else:
+        return render_template('update.html')
+
+@app.route('/update_bucketlist/<name>/<description>', methods=['POST', 'GET'])
 def update_bucketlist(name, description):
-    #return render_template('update.html', bucketlistinfo={'name':name, 'description':description})
+    username = session['user']['username']
+
+    user = None
+
+    if username in users.keys():
+        user = users[username]
+        if name in user.bucketlists.keys():
+            del user.bucketlists[name]
+
     return redirect(url_for('update_bucket', name=name, description=description))
 
 @app.route('/add_activity', methods=['POST', 'GET'])
