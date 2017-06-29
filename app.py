@@ -16,15 +16,20 @@ current_bucketlist = None
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/login', methods=['POST', 'GET'])
 def login():
+    ''' logs in a registered user '''
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        
-        for user in users.values():
-            if user.username == username:
-                if user.password == password:
-                    session['username'] = request.form['username']
-                    return redirect(url_for('manage'))
+        user = None
+
+        if username in users.keys():
+            user = users[username]
+            if password == user.password:
+                session['user'] = {'username':user.username, 'email':user.email}
+
+                return render_template('addlists.html', bucketlists=user.bucketlists)
+            else:
+                return render_template('login.html')
     else:
         return render_template('login.html')
 
