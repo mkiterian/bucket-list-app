@@ -122,6 +122,21 @@ def add_activity_to_bucketlist():
         return render_template('bucketlist.html', bucketlist=current_bucketlist,
                                activities=user.bucketlists[current_bucketlist].activities)
 
+@app.route('/delete_activity/<name>/<title>', methods=['GET'])
+def delete_activity(name, title):
+    ''' delete an activity given a name '''
+    username = session['user']['username']
+
+    user = None
+
+    if username in users.keys():
+        user = users[username]
+
+    for i in range(len(user.bucketlists[name].activities)):
+        if user.bucketlists[name].activities[i].title == title:
+            user.bucketlists[name].activities.pop(i)
+
+            return redirect(url_for('add_activity_to_bucketlist', bucketlist=user.bucketlists[name].name, activities=user.bucketlists[name].activities))
 
 @app.route('/update_activity')
 def update_activity():
