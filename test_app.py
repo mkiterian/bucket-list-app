@@ -16,7 +16,7 @@ class BucketListTest(TestCase):
         
         self.client.testing = True
         
-
+    
     def test_success(self):
         # sends HTTP GET request to the application
         # on the specified path
@@ -46,7 +46,7 @@ class BucketListTest(TestCase):
         result = self.client.get('/logout')
         self.assertTrue(result.status_code == 302)
 
-    def test_sign_page_posts_and_redirects(self):
+    def test_signup_page_posts_and_redirects(self):
         result = self.client.post('signup', data={
             'username': 'hermano',
             'email': 'herm@email.com',
@@ -55,7 +55,7 @@ class BucketListTest(TestCase):
         })
         self.assertTrue(result.status_code == 302)
 
-    def test_signup_redirects_to_managelist(self):
+    def test_signup_redirects_to_add_bucketlist(self):
         result = self.client.post('signup', data={
             'username': 'hermano',
             'email': 'herm@email.com',
@@ -64,25 +64,25 @@ class BucketListTest(TestCase):
         }, follow_redirects = True)
         self.assertIn(b'My Bucket Lists', result.data)
 
-    def test_login_page_posts_and_redirects(self):
-        user = User('hermano', 'herm@email.com', 'hard')
-        users['herm@email.com'] = user
+    # def test_login_page_posts_and_redirects(self):
+    #     user = User('hermano', 'herm@email.com', 'hard')
+    #     users['herm@email.com'] = user
 
-        result = self.client.post('login', data={
-            'username': 'hermano',
-            'password': 'hard'
-        })
-        self.assertTrue(result.status_code == 302)
+    #     result = self.client.post('login', data={
+    #         'username': 'hermano',
+    #         'password': 'hard'
+    #     })
+    #     self.assertTrue(result.status_code == 302)
 
-    def test_successful_login_redirects_to_managelists(self):
-        user = User('hermano', 'herm@email.com', 'hard')
-        users['herm@email.com'] = user
+    # def test_successful_login_redirects_to_managelists(self):
+    #     user = User('hermano', 'herm@email.com', 'hard')
+    #     users['herm@email.com'] = user
 
-        result = self.client.post('login', data={
-            'username': 'hermano',
-            'password': 'hard'
-        }, follow_redirects = True)
-        self.assertIn(b'My Bucket Lists', result.data)
+    #     result = self.client.post('login', data={
+    #         'username': 'hermano',
+    #         'password': 'hard'
+    #     }, follow_redirects = True)
+    #     self.assertIn(b'My Bucket Lists', result.data)
 
     def test_add_bucketlist_successfully_to_user(self):
         user = User('hermano', 'herm@email.com', 'hard')
@@ -113,14 +113,6 @@ class BucketListTest(TestCase):
     def test_bucket_list_is_instance_of_BucketList(self):
         bktlist = BucketList('Recipes', 'Learn to cook different')
         self.assertEqual(isinstance(bktlist, BucketList), True)
-
-    def test_activity_is_deleted_from_bucketlist(self):
-        bucketlist = BucketList('Travels', 'Tour Africa')
-        activity = Activity('Egypt', 'Visit the Pyramids')
-        bucketlist.add_activity(activity)
-        initial_no_of_activities = len(bucketlist.activities)
-        bucketlist.delete_activity(activity)
-        self.assertEqual(len(bucketlist.activities), 0)
 
 
     
