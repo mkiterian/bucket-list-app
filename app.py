@@ -1,7 +1,6 @@
-import json
 from user import User
 from bucketlist import BucketList
-from user import User
+
 from activity import Activity
 
 from flask import (Flask, render_template, url_for, 
