@@ -61,16 +61,6 @@ def logout():
 
     return redirect(url_for('login'))
 
-
-
-@app.route('/save', methods=['POST', 'GET'])
-def save():
-    if request.method == 'POST':
-        return redirect(url_for('manage'))
-
-    else:
-        return render_template('managelists.html')
-
 @app.route('/manage', methods=['POST', 'GET'])
 def manage():
 
