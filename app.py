@@ -81,20 +81,17 @@ def add_bucketlist():
 
 @app.route('/delete_bucketlist/<name>', methods=['GET'])
 def delete_bucketlist(name):
-    username = session['username']
+    ''' delete bucketlist given a name '''
+    username = session['user']['username']
 
-    bucketlists = None
+    user = None
 
-    for user in users.values():
-        #delete from user.bucketlists
-        if user.username == username:
-            bucketlists = user.bucketlists
-            break
-
-    if name in bucketlists.keys():
-        del user.bucketlists[name]
-                
-    return redirect(url_for('manage'))
+    if username in users.keys():
+        user = users[username]
+        if name in user.bucketlists.keys():
+            del user.bucketlists[name]
+    
+    return render_template('addlists.html', bucketlists = user.bucketlists)
 
 @app.route('/add_activity/<bucketlist>')
 @app.route('/add_activity', methods=['POST', 'GET'])
