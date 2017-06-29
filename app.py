@@ -61,26 +61,23 @@ def logout():
 
     return redirect(url_for('login'))
 
-@app.route('/manage', methods=['POST', 'GET'])
-def manage():
-
+@app.route('/add_bucketlist', methods=['POST', 'GET'])
+def add_bucketlist():
+    ''' creates a new bucketlist and adds it to user's bucketlists property'''
     if request.method == 'POST':
         name = request.form['title']
         description = request.form['description']
+        user = None
+        username = session['user']['username']
 
-        username = session['username']
-        
-        for user in users.values():
-            if user.username == username:
-                user.bucketlists[name] = BucketList(name, description)
+        if username in users.keys():
+            user = users[username]
+            user.bucketlists[name] = BucketList(name, description)
 
-        data = user.bucketlists
-        
-        return render_template('managelists.html', acts=data)
+        return render_template('addlists.html', bucketlists=user.bucketlists)
     else:
-        #pass bucketlist in get
-        username = session['username']
-        return render_template('managelists.html', data=username)
+        username = session['user']['username']
+        return render_template('addlists.html', username=username)
 
 @app.route('/delete_bucketlist/<name>', methods=['GET'])
 def delete_bucketlist(name):
