@@ -1,4 +1,7 @@
 # bucket-list-app
+
+[![Build Status](https://travis-ci.org/mkiterian/bucket-list-app.svg?branch=master)](https://travis-ci.org/mkiterian/bucket-list-app)
+
 **Installation**
 
 - Clone the repo to your local file system
