@@ -20,7 +20,7 @@
         
     <div class="container">
     <!--This the content container-->
-    <div class="row"> <h4>{{request.args.get('bucketlist')}}</h4>
+    <div class="row"> <h4>{{request.args.get('name')}}</h4>
     </div>
     
         <!--To post user checkbox, update and delete actions-->
@@ -40,8 +40,9 @@
                     <p> {{ activity['description'] }}</p>
                     </div>
                     <div class="card-action">
-                    <a class="waves-effect waves-light btn" href="#updt_act_div">Edit</a>
-                    <a class="btn waves-effect waves-teal btn_delete" href= {{url_for('delete_activity', name=request.args.get('bucketlist'), title=activity['title'])}}>Delete</a>
+                    <a class="waves-effect waves-light btn" 
+                       href={{url_for('update_activity', name=request.args.get('name'), title=activity['title'], description=activity['description'])}}>Edit</a>
+                    <a class="btn waves-effect waves-teal btn_delete" href= {{url_for('delete_activity', name=request.args.get('name'), title=activity['title'])}}>Delete</a>
                     </div>
                 </div>
                 {% endfor %}
@@ -71,7 +72,7 @@
     <!-- Add Activity List form -->
     <div id="frm_add_activity" class="modal">
     <div class="modal-content">
-      <form action= "/add_activity?bucketlist={{request.args.get('bucketlist')}}" method="POST">
+      <form action= "/add_activity?name={{request.args.get('name')}}" method="POST">
         <h4>Add Activity</h4>
         Title <input type="text" name="title" required><br>
         Description <input type="text" name="description" required><br>
