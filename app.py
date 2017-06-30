@@ -124,19 +124,40 @@ def update_bucketlist(name, description):
 
     return redirect(url_for('update_bucket', name=name, description=description))
 
-@app.route('/add_activity', methods=['POST', 'GET'])
-def add_activity_to_bucketlist():
-    ''' Add activity to named bucketlist '''
+@app.route('/update_activity/<name>/<title>/<description>', methods=['POST', 'GET'])
+def update_activity(name, title, description):
+    username = session['user']['username']
+
+    user = None
+
+    if username in users.keys():
+        user = users[username]
+        if name in user.bucketlists.keys():
+            for i in range(len(user.bucketlists[name].activities)):
+                if user.bucketlists[name].activities[i].title == title:
+                    user.bucketlists[name].activities.pop(i)
+                    break
+
+    return redirect(url_for('updt_act', name=name, title=title, description=description))
+
+@app.route('/updt_act', methods=['POST', 'GET'])
+def updt_act():    
     user = None
     username = session['user']['username']
 
     if username in users.keys():
         user = users[username]
 
-    current_bucketlist = request.args.get('bucketlist')
-
+    current_bucketlist = request.args.get('name')
+    print('&'*30)
+    print(current_bucketlist)
 
     if request.method == 'POST':
+        current_bucketlist = request.form['name']
+
+        print('!'*30)
+        print(current_bucketlist)
+
         title = request.form['title']
         description = request.form['description']
 
@@ -148,10 +169,43 @@ def add_activity_to_bucketlist():
         activities = user.bucketlists[current_bucketlist].activities
 
         return render_template('bucketlist.html',
-                               bucketlist=current_bucketlist,
+                            bucketlist=current_bucketlist,
+                            activities=activities)
+    else:
+        return render_template('update_activity.html', name=current_bucketlist)
+
+@app.route('/add_activity', methods=['POST', 'GET'])
+def add_activity_to_bucketlist():
+    ''' Add activity to named bucketlist '''
+    user = None
+    username = session['user']['username']
+
+    if username in users.keys():
+        user = users[username]
+
+    current_bucketlist = request.args.get('name')
+
+    print('&'*20)
+    print(current_bucketlist)
+
+
+    if request.method == 'POST':
+        title = request.form['title']
+        description = request.form['description']
+        
+
+        activity = Activity(title, description)
+
+        if current_bucketlist in user.bucketlists.keys():
+            user.bucketlists[current_bucketlist].add_activity(activity)
+
+        activities = user.bucketlists[current_bucketlist].activities
+
+        return render_template('bucketlist.html',
+                               name=current_bucketlist,
                                activities=activities)
     else:
-        return render_template('bucketlist.html', bucketlist=current_bucketlist,
+        return render_template('bucketlist.html', name=current_bucketlist,
                                activities=user.bucketlists[current_bucketlist].activities)
 
 @app.route('/delete_activity/<name>/<title>', methods=['GET'])
@@ -169,12 +223,8 @@ def delete_activity(name, title):
             user.bucketlists[name].activities.pop(i)
 
             return redirect(url_for('add_activity_to_bucketlist',
-                                    bucketlist=user.bucketlists[name].name,
+                                    name=user.bucketlists[name].name,
                                     activities=user.bucketlists[name].activities))
-
-@app.route('/update_activity')
-def update_activity():
-    pass
 
 if __name__ == '__main__':
     app.secret_key = 'xcxcyuxcyuxcyuxcyxuee'
