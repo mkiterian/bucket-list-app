@@ -28,6 +28,3 @@ $(document).ready(function(){
     $(".chkbox").prop("checked", false);
   else
     $(".chkbox").prop("checked", true);
-
-
-  $(btn_update_bckt).click
