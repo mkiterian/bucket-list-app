@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/mkiterian/bucket-list-app.svg?branch=master)](https://travis-ci.org/mkiterian/bucket-list-app)
 
+[![Coverage Status](https://coveralls.io/repos/github/mkiterian/bucket-list-app/badge.svg?branch=master)](https://coveralls.io/github/mkiterian/bucket-list-app?branch=master)
+
 **Installation**
 
 - Clone the repo to your local file system
