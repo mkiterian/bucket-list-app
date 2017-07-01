@@ -1,7 +1,6 @@
 from user import User
 import urllib.parse as urlparse
 from bucketlist import BucketList
-import os
 
 from activity import Activity
 
@@ -229,8 +228,5 @@ def delete_activity(name, title):
 
 if __name__ == '__main__':
     app.secret_key = 'xcxcyuxcyuxcyuxcyxuee'
-    
-    port = int(os.environ.get("PORT", 5000))
 
-    app.run(debug=True, host='0.0.0.0', port=port)
-    
+    app.run(debug=True)
