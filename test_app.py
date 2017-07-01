@@ -34,17 +34,17 @@ class BucketListTest(TestCase):
         result = self.client.get('/login')
         self.assertTrue(b'The best way to keep track of your dreams and goals' in result.data)
 
-    def test_logout_redirects_user(self):
-        user = User('hermano', 'herm@email.com', 'hard')
-        users['herm@email.com'] = user
+    # def test_logout_redirects_user(self):
+    #     user = User('hermano', 'herm@email.com', 'hard')
+    #     users['herm@email.com'] = user
 
-        self.client.post('login', data={
-            'username': 'hermano',
-            'password': 'hard'
-        })
-        # assert login page loads correctly
-        result = self.client.get('/logout')
-        self.assertTrue(result.status_code == 302)
+    #     self.client.post('login', data={
+    #         'username': 'hermano',
+    #         'password': 'hard'
+    #     })
+    #     # assert login page loads correctly
+    #     result = self.client.get('/logout')
+    #     self.assertTrue(result.status_code == 302)
 
     def test_signup_page_posts_and_redirects(self):
         result = self.client.post('signup', data={
@@ -74,15 +74,15 @@ class BucketListTest(TestCase):
     #     })
     #     self.assertTrue(result.status_code == 302)
 
-    # def test_successful_login_redirects_to_managelists(self):
-    #     user = User('hermano', 'herm@email.com', 'hard')
-    #     users['herm@email.com'] = user
+    def test_successful_login_redirects_to_managelists(self):
+        user = User('hermano', 'herm@email.com', 'hard')
+        users['herm@email.com'] = user
 
-    #     result = self.client.post('login', data={
-    #         'username': 'hermano',
-    #         'password': 'hard'
-    #     }, follow_redirects = True)
-    #     self.assertIn(b'My Bucket Lists', result.data)
+        result = self.client.post('login', data={
+            'username': 'hermano',
+            'password': 'hard'
+        }, follow_redirects = True)
+        self.assertIn(b'My Bucket Lists', result.data)
 
     def test_add_bucketlist_successfully_to_user(self):
         user = User('hermano', 'herm@email.com', 'hard')
