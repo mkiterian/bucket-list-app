@@ -18,8 +18,8 @@
           <div class="card-content">
           <h5 class="blue-grey-text darken-4">{{ request.args.get('name') }}</h5>
         <h5 class="blue-grey-text darken-4">{{ request.args.get('title') }}</h5>
-        Title <input type="text" name="title" value="{{ request.args.get('title') }}"><br>
-        Description <input type="text" name="description" value="{{ request.args.get('description') }}"><br>
+        Title <input type="text" name="title" value="{{ request.args.get('title') }}" class="blue-grey-text darken-4"><br>
+        Description <input type="text" name="description" value="{{ request.args.get('description') }}" class="blue-grey-text darken-4"><br>
         <input type="hidden" name="name" value="{{ request.args.get('name') }}"><br>
 
         <button class="btn waves-effect waves-light center-btn" type="submit" name="action">Save
