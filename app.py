@@ -1,11 +1,10 @@
-from user import User
-import urllib.parse as urlparse
-from bucketlist import BucketList
+from flask import (Flask, render_template, url_for,
+                   redirect, request, session)
 
 from activity import Activity
+from bucketlist import BucketList
+from user import User
 
-from flask import (Flask, render_template, url_for, 
-        redirect, request, jsonify, session, flash)
 
 users = {}
 
@@ -58,13 +57,14 @@ def signup():
 
 @app.route('/logout')
 def logout():
+    ''' logs out user and redirects to login page '''
     session.clear()
 
     return redirect(url_for('login'))
 
 @app.route('/add_bucketlist', methods=['POST', 'GET'])
 def add_bucketlist():
-    ''' creates a new bucketlist and adds it to user's bucketlists property'''
+    ''' creates a new bucketlist and adds it to user's bucketlists property '''
     if request.method == 'POST':
         name = request.form['title']
         description = request.form['description']
@@ -91,8 +91,18 @@ def delete_bucketlist(name):
         user = users[username]
         if name in user.bucketlists.keys():
             del user.bucketlists[name]
-    
-    return render_template('addlists.html', bucketlists = user.bucketlists)
+
+    return render_template('addlists.html', bucketlists=user.bucketlists)
+
+@app.route('/back_to_bucketlists', methods=['GET'])
+def back_to_bucketlists():
+    user = None
+    username = session['user']['username']
+
+    if username in users.keys():
+        user = users[username]
+
+        return render_template('addlists.html', bucketlists=user.bucketlists)
 
 @app.route('/update_bucket', methods=['POST', 'GET'])
 def update_bucket():
@@ -109,7 +119,7 @@ def update_bucket():
         return render_template('addlists.html', bucketlists=user.bucketlists)
 
     else:
-        return render_template('update.html')
+        return render_template('update_bucketlist.html')
 
 @app.route('/update_bucketlist/<name>/<description>', methods=['POST', 'GET'])
 def update_bucketlist(name, description):
@@ -149,14 +159,9 @@ def updt_act():
         user = users[username]
 
     current_bucketlist = request.args.get('name')
-    print('&'*30)
-    print(current_bucketlist)
 
     if request.method == 'POST':
         current_bucketlist = request.form['name']
-
-        print('!'*30)
-        print(current_bucketlist)
 
         title = request.form['title']
         description = request.form['description']
@@ -169,8 +174,8 @@ def updt_act():
         activities = user.bucketlists[current_bucketlist].activities
 
         return render_template('bucketlist.html',
-                            bucketlist=current_bucketlist,
-                            activities=activities)
+                               bucketlist=current_bucketlist,
+                               activities=activities)
     else:
         return render_template('update_activity.html', name=current_bucketlist)
 
@@ -185,14 +190,10 @@ def add_activity_to_bucketlist():
 
     current_bucketlist = request.args.get('name')
 
-    print('&'*20)
-    print(current_bucketlist)
-
-
     if request.method == 'POST':
         title = request.form['title']
         description = request.form['description']
-        
+
 
         activity = Activity(title, description)
 
