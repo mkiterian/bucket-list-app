@@ -1,14 +1,53 @@
 from flask import (Flask, render_template, url_for,
                    redirect, request, session)
 
-from activity import Activity
-from bucketlist import BucketList
-from user import User
+from flask_sqlalchemy import SQLAlchemy
+
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/bucketlistdb'
+
+db = SQLAlchemy(app)
+
+
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True)
+    email = db.Column(db.String(120), unique=True)
+    password = db.Column(db.String(120))
+    bucketlists = db.relationship('BucketList', backref='user', lazy='dynamic')
+
+    def __init__(self, username, email, password):
+        self.username = username
+        self.email = email
+        self.password = password
+
+class BucketList(db.Model):
+    __tablename__ = 'bucketlists'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
+    description = db.Column(db.String(200), unique=True)
+    owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    activities = db.relationship('Activity', backref='bucketlist', lazy='dynamic')
+
+    def __init__(self, name, description):
+        self.name = name
+        self.description = description
+
+class Activity(db.Model):
+    __tablename__ = 'activities'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(200), unique=True)
+    bucket_id = db.Column(db.Integer, db.ForeignKey('bucketlists.id'))
+
+    def __init__(self, title, description):
+        self.title = title
+        self.description = description
 
 
 users = {}
-
-app = Flask(__name__)
 
 current_bucketlist = None
 
@@ -44,7 +83,8 @@ def signup():
 
         if password == confirm_password:
             user = User(username, email, password)
-            users[username] = user
+            db.session.add(user)
+            db.session.commit()
 
             session['user'] = {'username': username, 'email': email}
 
@@ -229,5 +269,4 @@ def delete_activity(name, title):
 
 if __name__ == '__main__':
     app.secret_key = 'xcxcyuxcyuxcyuxcyxuee'
-
     app.run(debug=True)
